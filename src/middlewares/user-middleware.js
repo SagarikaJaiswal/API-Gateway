@@ -23,6 +23,28 @@ function validateCreateUser(req, res, next){
     next();
 }
 
+function validateSignIn(req, res, next){
+    if(!req.body.email){
+        ErrorResponse.error = new AppError(
+            "Email not found in the request",
+            StatusCodes.BAD_REQUEST
+        );
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json(ErrorResponse);
+    }else if(!req.body.password){
+        ErrorResponse.error = new AppError(
+            "Password not found in the request",
+            StatusCodes.BAD_REQUEST
+        );
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json(ErrorResponse);
+    }
+    next();
+}
+
 module.exports = {
-    validateCreateUser
+    validateCreateUser,
+    validateSignIn
 }
