@@ -50,7 +50,23 @@ async function signIn(data) {
     }
 }
 
+async function isAuthenticated(token) {
+    try {
+        const decoded = Auth.verifyToken(token);
+        const user = await userRepository.get(decoded.id);
+        if (!user) {
+            throw new AppError("User not found", StatusCodes.NOT_FOUND);
+        }
+        return user.id;
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError("Something went wrong", StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
 module.exports = {
     createUser,
     signIn,
+    isAuthenticated
 }

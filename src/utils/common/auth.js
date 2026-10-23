@@ -17,7 +17,16 @@ function createToken(data) {
     }
 }
 
+function verifyToken(token) {
+    try {
+        const decoded = jwt.verify(token, ServerConfig.JWT_SECRET);
+        return decoded;
+    } catch (error) {
+        throw new AppError("Invalid token", StatusCodes.UNAUTHORIZED);
+    }
+}
 module.exports = {
     comparePassword,
-    createToken
+    createToken,
+    verifyToken
 }
