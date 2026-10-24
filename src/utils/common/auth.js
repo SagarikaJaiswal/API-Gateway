@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { AppError } = require('../errors/app-error');
+const { AppError } = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { ServerConfig } = require('../../config');
 
@@ -22,6 +22,9 @@ function verifyToken(token) {
         const decoded = jwt.verify(token, ServerConfig.JWT_SECRET);
         return decoded;
     } catch (error) {
+        if (error.name === "TokenExpiredError") {
+            throw new AppError("Token has expired", StatusCodes.UNAUTHORIZED);
+        }
         throw new AppError("Invalid token", StatusCodes.UNAUTHORIZED);
     }
 }
